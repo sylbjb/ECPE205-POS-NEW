@@ -10,7 +10,14 @@ public class orderScreen extends JFrame{
 
     JTextField skuField = new JTextField(20);
     JButton enterButton = new JButton("Enter");
-    JLabel totalLabel = new JLabel("Total: 0.00");
+
+
+    JLabel totalLabel = new JLabel("TOTAL:");
+    JLabel totalAmount = new JLabel("₱0.00");
+
+
+    JButton grantDiscount = new JButton("Grant Discount");
+    JButton revokeDiscount = new JButton("Revoke Discount");
 
     JTable table = new JTable();
     Container con = this.getContentPane();
@@ -64,8 +71,25 @@ public class orderScreen extends JFrame{
         enterButton.addActionListener(e -> addOrder());
         skuField.addActionListener(e -> addOrder());
 
+        grantDiscount.addActionListener(e -> {
+            applyDiscount();
+        });
+
+        revokeDiscount.addActionListener(e -> {
+            updateTotal();
+        });
+
         JPanel totalPanel = new JPanel(new GridBagLayout());
-        addComponent(0,0,1,1,GridBagConstraints.CENTER, GridBagConstraints.NONE, totalPanel, totalLabel);
+
+        totalLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        totalAmount.setFont(new Font("Arial", Font.BOLD, 20));
+
+
+
+        addComponent(0,0,1,1,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, totalPanel, totalLabel);
+        addComponent(1,0,1,1,GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL, totalPanel, totalAmount);
+        addComponent(0,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, totalPanel, grantDiscount);
+        addComponent(1,1,1,1,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, totalPanel, revokeDiscount);
         con.add(totalPanel, BorderLayout.SOUTH);
 
 
@@ -107,10 +131,23 @@ public class orderScreen extends JFrame{
         for (products p : orderList){
             total += p.getAmount();
         }
-        totalLabel.setText(String.format("Total: %.2f", total));
+        totalAmount.setText(String.format("₱%.2f", total));
     }
 
+    public void applyDiscount(){
 
+        float gross = 0;
+        for (products p : orderList){
+            gross += p.getAmount();
+        }
+
+        float vatEx = gross / 1.12f;
+        float vat = vatEx  * 0.12f;
+        float discount = vatEx * 0.20f;
+        float net = gross - vat - discount;
+
+        totalAmount.setText(String.format("₱%.2f", net));
+    }
 
 
 
