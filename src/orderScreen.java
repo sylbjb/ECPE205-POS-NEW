@@ -10,7 +10,7 @@ public class orderScreen extends JFrame{
 
     JTextField skuField = new JTextField(20);
     JButton enterButton = new JButton("Enter");
-
+    JButton removeButton = new JButton("Remove");
 
     JLabel totalLabel = new JLabel("TOTAL:");
     JLabel totalAmount = new JLabel("₱0.00");
@@ -35,6 +35,7 @@ public class orderScreen extends JFrame{
 
         addComponent(0,0,1,1,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, ipanel, skuField);
         addComponent(1,0,1,1,GridBagConstraints.CENTER, GridBagConstraints.NONE, ipanel, enterButton);
+        addComponent(2,0,1,1, GridBagConstraints.CENTER, GridBagConstraints.NONE, ipanel, removeButton);
         con.add(ipanel, BorderLayout.NORTH);
 
         tableModel = new AbstractTableModel() {
@@ -76,6 +77,12 @@ public class orderScreen extends JFrame{
         });
 
         revokeDiscount.addActionListener(e -> {
+            updateTotal();
+        });
+
+        removeButton.addActionListener(e -> {
+            orderList.remove(table.getSelectedRow());
+            tableModel.fireTableDataChanged();
             updateTotal();
         });
 
